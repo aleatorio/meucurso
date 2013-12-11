@@ -4,10 +4,16 @@ public class Disciplina {
 
 	private String nome;
 	private int creditos;
+	private Disciplina[] preRequisitos = new Disciplina[]{};
 
 	public Disciplina(String nome, int creditos) {
 		this.nome = nome;
 		this.creditos = creditos;
+	}
+
+	public Disciplina(String nome, int creditos, Disciplina[] disciplinas) {
+		this(nome, creditos);
+		this.preRequisitos = disciplinas;
 	}
 
 	@Override
@@ -44,6 +50,10 @@ public class Disciplina {
 
 	public int getCreditos() {
 		return creditos;
+	}
+
+	public Disciplina[] getPreRequisitos() {
+		return this.preRequisitos;
 	}
 
 }
