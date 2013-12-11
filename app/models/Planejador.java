@@ -1,7 +1,9 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,10 +16,10 @@ import java.util.Set;
 public class Planejador {
 
 	private static final int MAX_CREDITOS = 28;
-	private Map<Integer, Periodo> alocadas;
+	private Map<Integer, Periodo> periodos;
 
 	public Planejador() {
-		alocadas = new HashMap<Integer, Periodo>();
+		periodos = new HashMap<Integer, Periodo>();
 		alocaPrimeiroPeriodo();
 	}
 
@@ -29,12 +31,12 @@ public class Planejador {
 		primeiroPeriodo.addDisciplina(new Disciplina("Vetorial ", 4));
 		primeiroPeriodo.addDisciplina(new Disciplina("LPT", 4));
 		primeiroPeriodo.addDisciplina(new Disciplina("IC", 4));
-		alocadas.put(1, primeiroPeriodo);
+		periodos.put(1, primeiroPeriodo);
 		
 	}
 
 	public Set<Disciplina> getDisciplinasAlocadasNoPeriodo(int periodo) {
-		return this.alocadas.keySet().contains(periodo) ? this.alocadas
+		return this.periodos.keySet().contains(periodo) ? this.periodos
 				.get(periodo).getDisciplinas() : new HashSet<Disciplina>();
 	}
 
@@ -51,10 +53,10 @@ public class Planejador {
 		}
 		
 		if (verificaPreRequisitos(disciplina, periodo)) {
-			if (!alocadas.containsKey(periodo)) {
-				alocadas.put(periodo, new Periodo());
+			if (!periodos.containsKey(periodo)) {
+				periodos.put(periodo, new Periodo());
 			}
-			this.alocadas.get(periodo).addDisciplina(disciplina);
+			this.periodos.get(periodo).addDisciplina(disciplina);
 			
 		} else{
 			throw new AlocacaoNaoPermitidaException(
@@ -76,14 +78,17 @@ public class Planejador {
 	}
 
 	public int getTotalCreditos(int periodo) {
-		if (!this.alocadas.containsKey(periodo)){
+		if (!this.periodos.containsKey(periodo)){
 			return 0;
 		}
-		return this.alocadas.get(periodo).getTotalCreditos();
+		return this.periodos.get(periodo).getTotalCreditos();
 	}
 
 	public void desalocar(int periodo, Disciplina p2) {
 		getDisciplinasAlocadasNoPeriodo(periodo).remove(p2);
 	}
 
+	public List<Periodo> getPeriodos(){
+		return new ArrayList<Periodo>(this.periodos.values());
+	}
 }
