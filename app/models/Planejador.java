@@ -13,27 +13,29 @@ import java.util.Set;
  */
 public class Planejador {
 
-	private Map<Integer, Set<Disciplina>> alocadas;
+	private static final int MAX_CREDITOS = 28;
+	private Map<Integer, Periodo> alocadas;
 
 	public Planejador() {
-		alocadas = new HashMap<Integer, Set<Disciplina>>();
+		alocadas = new HashMap<Integer, Periodo>();
 		alocaPrimeiroPeriodo();
 	}
 
 	private void alocaPrimeiroPeriodo() {
-		Set<Disciplina> primeiroPeriodo = new HashSet<Disciplina>();
-		primeiroPeriodo.add(new Disciplina("P1", 4));
-		primeiroPeriodo.add(new Disciplina("LP1", 4));
-		primeiroPeriodo.add(new Disciplina("Cálculo 1", 4));
-		primeiroPeriodo.add(new Disciplina("Vetorial ", 4));
-		primeiroPeriodo.add(new Disciplina("LPT", 4));
-		primeiroPeriodo.add(new Disciplina("IC", 4));
+		Periodo primeiroPeriodo = new Periodo();
+		primeiroPeriodo.addDisciplina(new Disciplina("P1", 4));
+		primeiroPeriodo.addDisciplina(new Disciplina("LP1", 4));
+		primeiroPeriodo.addDisciplina(new Disciplina("Cálculo 1", 4));
+		primeiroPeriodo.addDisciplina(new Disciplina("Vetorial ", 4));
+		primeiroPeriodo.addDisciplina(new Disciplina("LPT", 4));
+		primeiroPeriodo.addDisciplina(new Disciplina("IC", 4));
 		alocadas.put(1, primeiroPeriodo);
+		
 	}
 
 	public Set<Disciplina> getDisciplinasAlocadasNoPeriodo(int periodo) {
 		return this.alocadas.keySet().contains(periodo) ? this.alocadas
-				.get(periodo) : new HashSet<Disciplina>();
+				.get(periodo).getDisciplinas() : new HashSet<Disciplina>();
 	}
 
 	public void alocar(int periodo, Disciplina disciplina)
@@ -42,12 +44,19 @@ public class Planejador {
 			throw new AlocacaoNaoPermitidaException(
 					"Nenhuma alocacao pode ser feita no primeiro periodo");
 		}
-		Set<Disciplina> alocadas = getDisciplinasAlocadasNoPeriodo(periodo);
-		if (verificaPreRequisitos(disciplina, periodo)) {
-			alocadas.add(disciplina);
-			this.alocadas.put(periodo, alocadas);
+		
+		if (getTotalCreditos(periodo)+disciplina.getCreditos() > MAX_CREDITOS) {
+			throw new AlocacaoNaoPermitidaException(
+					"Ultrapassou o limite de créditos.");
 		}
-		else{
+		
+		if (verificaPreRequisitos(disciplina, periodo)) {
+			if (!alocadas.containsKey(periodo)) {
+				alocadas.put(periodo, new Periodo());
+			}
+			this.alocadas.get(periodo).addDisciplina(disciplina);
+			
+		} else{
 			throw new AlocacaoNaoPermitidaException(
 					"Quebra de pré-requisito.");
 		}
@@ -67,11 +76,10 @@ public class Planejador {
 	}
 
 	public int getTotalCreditos(int periodo) {
-		int total = 0;
-		for (Disciplina disc : getDisciplinasAlocadasNoPeriodo(periodo)) {
-			total += disc.getCreditos();
+		if (!this.alocadas.containsKey(periodo)){
+			return 0;
 		}
-		return total;
+		return this.alocadas.get(periodo).getTotalCreditos();
 	}
 
 	public void desalocar(int periodo, Disciplina p2) {

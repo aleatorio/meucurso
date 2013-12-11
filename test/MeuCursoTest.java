@@ -109,6 +109,13 @@ public class MeuCursoTest {
 
 	@Test
 	public void deveRespeitarLimiteDeCreditos() {
+		try {
+			planejador.alocar(2, new Disciplina("Disciplina", 29));
+			Assert.fail();
+		} catch (AlocacaoNaoPermitidaException e) {
+			assertEquals("Ultrapassou o limite de créditos.",
+					e.getMessage());
+		}
 	}
 
 }
