@@ -1,7 +1,10 @@
-@(message: String)
+@(periodos: List[Periodo])
 
-@main("Welcome to Play") {
+@main("Interface") {
 
-    @play20.welcome(message, style = "Java")
+    @for(periodo <- periodos){
+    	@periodo.getTotalCreditos()</br>
+    	
+    }
 
 }
