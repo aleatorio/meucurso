@@ -1,7 +1,8 @@
-@import helper._ 
+@(periodos: List[Periodo])
+
 @import helper._ 
 
-@main("TODO LIST") {
+@main("Meu curso") {
 
 <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav"
 	role="banner">
@@ -26,37 +27,22 @@
 	</div>
 </header>
 <div class="wrapper" style="height: 100%;">
+	<div class="titulo">
+		<nome-principal>Meu Curso</nome-principal>
+	</div>
+	<br/>	
 	<div id="colunas">
-		<div class="titulo">
-			<nome-principal>Meu Curso</nome-principal>
-		</div>
-		<br/>	
-		<div id="c1" class="coluna">
-			<div class="disciplina">
-				<nome>Disciplina 1</nome><br/>
-				<descricao>4 creditos</descricao>
+		@for(periodo <- periodos){
+			<div id="c1" class="coluna">
+			@for(disciplina <- periodo.getDisciplinas()){
+				<div class="disciplina">
+					<nome>@disciplina.getNome()</nome><br/>
+					<descricao>@disciplina.getCreditos() creditos</descricao>
+				</div>
+			}
 			</div>
-			<div class="disciplina">
-				<nome>Disciplina 2</nome><br/>
-				<descricao>4 creditos</descricao>
-			</div>
-			<div class="disciplina">
-				<nome>Disciplina 3</nome><br/>
-				<descricao>2 creditos</descricao>
-			</div>
-			<div class="disciplina">
-				<nome>Disciplina 4</nome><br/>
-				<descricao>4 creditos</descricao>
-			</div>
-			<div class="disciplina">
-				<nome>Disciplina 5</nome><br/>
-				<descricao>10 creditos</descricao>
-			</div>
-			<div class="disciplina">
-				<nome>Disciplina 6</nome><br/>
-				<descricao>4 creditos</descricao>
-			</div>
-		</div>
+		}
+	
 		<div id="c2" class="coluna"></div>
 		<div id="c3" class="coluna"></div>
 		<div id="c4" class="coluna"></div>
